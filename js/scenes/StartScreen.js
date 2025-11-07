@@ -8,6 +8,7 @@ export class StartScreen extends Phaser.Scene {
     this.load.image('start_screen_image_background', 'assets/images/startScreenBackground.png');
     this.load.image('start_screen_image_button', 'assets/images/startScreenButton.png');
     this.load.audio('start_screen_music', ['assets/audio/startScreen.mp3']);
+    this.load.audio("start_button_sound", "assets/audio/buttonClick.wav");
   }
 
   playBackgroundMusic() {
@@ -17,6 +18,12 @@ export class StartScreen extends Phaser.Scene {
     });
      
     this.StartScreenMusic.play();
+  }
+
+  stopBackgroundMusic() {
+    if (this.StartScreenMusic && this.StartScreenMusic.isPlaying) {
+      this.StartScreenMusic.stop(); 
+    }
   }
 
   create() {
@@ -35,6 +42,7 @@ export class StartScreen extends Phaser.Scene {
       .on("pointerover", () => buttonImage.setScale(buttonImageScaleX * 1.1, buttonImageScaleY * 1.1))
       .on("pointerout", () => buttonImage.setScale(buttonImageScaleX, buttonImageScaleY))
       .on("pointerdown", () => {
+        this.sound.add("start_button_sound", { volume: 20, loop: false }).play();
         this.scene.start('TitleMenu');
       });
 

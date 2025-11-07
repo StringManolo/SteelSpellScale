@@ -5,16 +5,126 @@ export class NewGame extends Phaser.Scene {
 
   preload() {
     // TODO: Need new image here for asking for name at game start
-    this.load.image('start_screen_image_background', 'assets/images/startScreenBackground.png');
-  
+    this.load.image('new_game_image_background', 'assets/images/castleInteriorCinematic.png');
+    this.load.spritesheet("orc", "assets/sprites/orcSpriteSheet.png", {
+      frameWidth: 176 / 3,
+      frameHeight: 126 / 2
+    });
+
+    this.load.spritesheet("warrior", "assets/sprites/warriorSpriteSheet.png", {
+      frameWidth: 173 / 3,
+      frameHeight: 123 / 2
+    });
+
+    this.load.audio("warrior_step_audio", "assets/audio/walkingStep.wav");
+    //this.load.audio("game_audio_track_1", "assets/audio/map.mp3");
   }
 
   create() {
+    // TODO: Animated scene / movie
     // TODO: Replace prompt by a menu
-    const playerName = prompt('Name your charcater');
-    const backgroundImage = this.add.image(400, 300, "start_screen_image_background");
+    //const playerName = prompt('Name your character');
 
+    const backgroundImage = this.add.image(400, 300, "new_game_image_background");
     backgroundImage.setDisplaySize(800, 600);
+
+    let stepTimer = null;
+    const playWarriorStepAudio = () => {
+      this.sound.add("warrior_step_audio", { volume: 20, loop: false }).play(); 
+    };
+
+    this.anims.create({
+      key: 'orc_front_idle',
+      frames: [{ key: 'orc', frame: 0 }]
+    });
+    this.anims.create({
+      key: 'orc_front_walk',
+      frames: [{ key: 'orc', frame: 3 }]
+    });
+    this.anims.create({
+      key: 'orc_back_idle',
+      frames: [{ key: 'orc', frame: 1 }]
+    });
+    this.anims.create({
+      key: 'orc_back_walk',
+      frames: [{ key: 'orc', frame: 4 }]
+    });
+    this.anims.create({
+      key: 'orc_side_idle',
+      frames: [{ key: 'orc', frame: 2 }]
+    });
+    this.anims.create({
+      key: 'orc_side_walk',
+      frames: [{ key: 'orc', frame: 5 }]
+    });
+
+    this.anims.create({
+      key: 'warrior_front_idle',
+      frames: [{ key: 'warrior', frame: 0 }]
+    });
+    this.anims.create({
+      key: 'warrior_front_walk',
+      frames: [{ key: 'warrior', frame: 3 }]
+    });
+    this.anims.create({
+      key: 'warrior_back_idle',
+      frames: [{ key: 'warrior', frame: 1 }]
+    });
+    this.anims.create({
+      key: 'warrior_back_walk',
+      frames: [{ key: 'warrior', frame: 4 }]
+    });
+    this.anims.create({
+      key: 'warrior_side_idle',
+      frames: [{ key: 'warrior', frame: 2 }]
+    });
+    this.anims.create({
+      key: 'warrior_side_walk',
+      frames: [{ key: 'warrior', frame: 5 }]
+    });
+
+    const orc = this.add.sprite(405, 450, 'orc').setOrigin(0.5, 1).setScale(2);
+    const warrior = this.add.sprite(400, 800, 'warrior').setOrigin(0.5, 1).setScale(3.5);
+    
+    orc.play('orc_front_idle');
+    warrior.play('warrior_back_walk');
+
+    const startWalkingSteps = () => {
+      playWarriorStepAudio();
+      
+      stepTimer = this.time.addEvent({
+        delay: 1000, // play 1 step each second
+        callback: playWarriorStepAudio,
+        callbackScope: this,
+        loop: true
+      });
+    };
+
+    const stopWalkingSteps = () => {
+      if (stepTimer) {
+        stepTimer.remove(); 
+        stepTimer = null;
+      }
+    };
+
+    // Stop the background music for dramatic effect
+    const startScreen = this.scene.get('StartScreen');
+    if (startScreen && startScreen.stopBackgroundMusic) {
+      startScreen.stopBackgroundMusic();
+    }
+
+    startWalkingSteps();
+
+    this.tweens.add({
+      targets: warrior,
+      y: 600,
+      duration: 7000,
+      ease: "linear",
+      onComplete: () => {
+        warrior.play("warrior_back_idle");
+        stopWalkingSteps(); 
+      }
+    });
 
   }
 }

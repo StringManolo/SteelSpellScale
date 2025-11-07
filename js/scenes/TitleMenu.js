@@ -5,6 +5,8 @@ export class TitleMenu extends Phaser.Scene {
 
   preload() {
     this.load.image('title_menu_image_background', 'assets/images/titleMenuBackground.png');
+    this.load.audio("title_menu_option_hover_sound", "assets/audio/optionHover.wav");
+    this.load.audio("title_menu_button_sound", "assets/audio/buttonClick.wav");
   }
 
   create() {
@@ -74,9 +76,14 @@ export class TitleMenu extends Phaser.Scene {
 
     const loadNewScene = sceneName => this.scene.start(sceneName); // use TitleMemu as this
 
+    const playHoverSound = () => this.sound.add("title_menu_option_hover_sound", { volume: 20, loop: false }).play();
+    const playButtonSound = () => this.sound.add("title_menu_button_sound", { volume: 20, loop: false }).play();     
+
+
     function makeMenuItemInteractive(text, scene) {
       text.setInteractive({ useHandCursor: true })
         .on('pointerover', () => {
+          playHoverSound();
           text.setStyle(menuItemHoverStyle);
           text.setScale(1.05);
         })
@@ -86,9 +93,9 @@ export class TitleMenu extends Phaser.Scene {
         })
         .on('pointerdown', () => {
           text.setScale(0.95);
+          playButtonSound();
           switch(text.text) {
             case 'NEW GAME':
-              alert('Starting new game...');
               loadNewScene('NewGame');
               break;
             case 'CONTINUE':
