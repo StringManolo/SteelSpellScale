@@ -26,13 +26,13 @@ export class Dialogs {
       },
       text: {
         x: 200,
-        y: 550,
-        width: 550,
+        y: 530,
+        width: 500,
         ...options.text
       },
       name: {
         x: 200,
-        y: 520,
+        y: 490,
         ...options.name
       },
       characterSettings: {

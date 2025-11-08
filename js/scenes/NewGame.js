@@ -126,28 +126,37 @@ export class NewGame extends Phaser.Scene {
     }
 
     const dialogs = new Dialogs(this, [
-      { emisor: "orc", text: "¡Who is disturbing my sleep!" },
-      { emisor: "warrior", text: "I speak in the name of the Warrior's King, Orc." },
-      { emisor: "orc", text: "ORC? King ORC!."},
-      { emisor: "warrior", text: "You are not my King, Orc" },
-      { emisor: "orc", text: "Not yet." }
-    ], {
+      { emisor: "orc", text: "(Growling) What wretched mortal dares disturb Grommash, King of the Iron Claws?" },
+      { emisor: "warrior", text: "King Grommash. I am no mere mortal. I am Commander Kaelen, and I speak in the name of High General Roric." },
+      { emisor: "orc", text: "Roric... 'The Stonewall' General. He still lives? I thought his pride would have gotten him killed by now. Why does he send a whelp to my throne?" },
+      { emisor: "warrior", text: "He sends me with an offer of alliance, not insults. An offer that concerns the Mages' Kingdom." },
+      { emisor: "orc", text: "The Mages? (He scoffs) Those cowards who hide behind their glowing walls and forbidden magic. What of them?" },
+      { emisor: "warrior", text: "Our scouts report the Mages have vanished from their towers. They are hiding in the Dragon's Teeth mountains." },
+      { emisor: "orc", text: "The Dragon's Teeth? Only fools and dragon-fire go there. Why would they... (He pauses, as if realizing) ...the Dwarves." },
+      { emisor: "warrior", text: "Exactly. We believe they intend to use their magic to guide the Dragons, to unleash them upon the Dwarven cities in the heart of the earth." },
+      { emisor: "orc", text: "Hmph. The Mountain Folk and their glittering trinkets. Let them burn. Why should the Iron Claws bleed for them?" },
+      { emisor: "warrior", text: "You won't be bleeding FOR them. You'll be taking advantage. The General proposes a united front... against the MAGES." },
+      { emisor: "warrior", text: "While the Dragons and Dwarves tear the mountains apart, the Mages will be exposed. Our allied armies will strike them from the surface, ending their threat for good." },
+      { emisor: "orc", text: "(A low, rumbling laugh) Roric... that old fox. He sees a mutual enemy and a perfect distraction. Using the Dwarves as an anvil while we act as the hammer..." },
+      { emisor: "orc", text: "Very well. Tell your 'Stonewall' General he has his pact. The Iron Claws hunger for a real fight. This will be... glorious." },
+      { emisor: "orc", text: "Now get out of my sight. And Kaelen... tell Roric that if this is a trick, my armies will march on his lands *after* we've feasted on the Mages." },
+      { emisor: "warrior", text: "(Muttering to self as he leaves) He agreed too easily. The Mages are a threat, but... sacrificing the Dwarves feels wrong. The General is blind. I have to warn them." }
+  ], {
       characterSettings: {
         orc: {
-          width: 150,    
+          width: 150,
           height: 150,
-          x: 100,        
+          x: 100,
           y: 545
         },
         warrior: {
-          width: 150,    
+          width: 150,
           height: 150,
-          x: 100,         
+          x: 100,
           y: 545
         }
       }
     });
-
 
     startWalkingSteps();
 
@@ -161,6 +170,9 @@ export class NewGame extends Phaser.Scene {
         stopWalkingSteps();
         this.time.delayedCall(500, () => {
           dialogs.play();
+          // warrior turns arround and leaves
+          // scene slowly goes black and music starts playing
+          // swap to new scene (maybe other characters and their point of view)
         });
       }
     });
