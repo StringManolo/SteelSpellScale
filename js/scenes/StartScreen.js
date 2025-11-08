@@ -13,7 +13,7 @@ export class StartScreen extends Phaser.Scene {
 
   playBackgroundMusic() {
     this.StartScreenMusic = this.sound.add('start_screen_music', {
-      volume: 0.3,
+      volume: 1,
       loop: true
     });
      

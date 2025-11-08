@@ -1,3 +1,5 @@
+import { Dialogs } from "../../utils/Dialogs.js";
+
 export class NewGame extends Phaser.Scene {
   constructor() {
     super({ key: 'NewGame' });
@@ -18,6 +20,16 @@ export class NewGame extends Phaser.Scene {
 
     this.load.audio("warrior_step_audio", "assets/audio/walkingStep.wav");
     //this.load.audio("game_audio_track_1", "assets/audio/map.mp3");
+    
+
+    // dialog images:
+    this.load.image('dialog_background', 'assets/images/dialog_background.png');
+    this.load.image('orc_portrait', 'assets/images/orc_portrait.png');
+    this.load.image('warrior_portrait', 'assets/images/warrior_portrait.png');
+
+    // dialog audio:
+    this.load.audio('dialog_sound', 'assets/audio/dialog.wav');
+    this.load.audio('dialog_typing', 'assets/audio/dialog_typing.wav');
   }
 
   create() {
@@ -113,6 +125,30 @@ export class NewGame extends Phaser.Scene {
       startScreen.stopBackgroundMusic();
     }
 
+    const dialogs = new Dialogs(this, [
+      { emisor: "orc", text: "¡Who is disturbing my sleep!" },
+      { emisor: "warrior", text: "I speak in the name of the Warrior's King, Orc." },
+      { emisor: "orc", text: "ORC? King ORC!."},
+      { emisor: "warrior", text: "You are not my King, Orc" },
+      { emisor: "orc", text: "Not yet." }
+    ], {
+      characterSettings: {
+        orc: {
+          width: 150,    
+          height: 150,
+          x: 100,        
+          y: 545
+        },
+        warrior: {
+          width: 150,    
+          height: 150,
+          x: 100,         
+          y: 545
+        }
+      }
+    });
+
+
     startWalkingSteps();
 
     this.tweens.add({
@@ -122,7 +158,10 @@ export class NewGame extends Phaser.Scene {
       ease: "linear",
       onComplete: () => {
         warrior.play("warrior_back_idle");
-        stopWalkingSteps(); 
+        stopWalkingSteps();
+        this.time.delayedCall(500, () => {
+          dialogs.play();
+        });
       }
     });
 
