@@ -8,6 +8,7 @@ export class Dialogs {
     this.currentText = '';
     this.typeTimer = null;
     this.typingSpeed = 80; // ms between writes
+    this.onComplete = options.onComplete || null; 
 
     this.config = {
       background: {
@@ -199,6 +200,10 @@ export class Dialogs {
     if (this.typeTimer) {
       this.typeTimer.remove();
       this.typeTimer = null;
+    }
+
+    if (this.onComplete) {
+      this.onComplete();
     }
   }
 

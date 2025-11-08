@@ -6,7 +6,6 @@ export class NewGame extends Phaser.Scene {
   }
 
   preload() {
-    // TODO: Need new image here for asking for name at game start
     this.load.image('new_game_image_background', 'assets/images/castleInteriorCinematic.png');
     this.load.spritesheet("orc", "assets/sprites/orcSpriteSheet.png", {
       frameWidth: 176 / 3,
@@ -19,30 +18,21 @@ export class NewGame extends Phaser.Scene {
     });
 
     this.load.audio("warrior_step_audio", "assets/audio/walkingStep.wav");
-    //this.load.audio("game_audio_track_1", "assets/audio/map.mp3");
-    
 
-    // dialog images:
     this.load.image('dialog_background', 'assets/images/dialog_background.png');
     this.load.image('orc_portrait', 'assets/images/orc_portrait.png');
     this.load.image('warrior_portrait', 'assets/images/warrior_portrait.png');
-
-    // dialog audio:
     this.load.audio('dialog_sound', 'assets/audio/dialog.wav');
     this.load.audio('dialog_typing', 'assets/audio/dialog_typing.wav');
   }
 
   create() {
-    // TODO: Animated scene / movie
-    // TODO: Replace prompt by a menu
-    //const playerName = prompt('Name your character');
-
     const backgroundImage = this.add.image(400, 300, "new_game_image_background");
     backgroundImage.setDisplaySize(800, 600);
 
     let stepTimer = null;
     const playWarriorStepAudio = () => {
-      this.sound.add("warrior_step_audio", { volume: 20, loop: false }).play(); 
+      this.sound.add("warrior_step_audio", { volume: 20, loop: false }).play();
     };
 
     this.anims.create({
@@ -97,15 +87,14 @@ export class NewGame extends Phaser.Scene {
 
     const orc = this.add.sprite(405, 450, 'orc').setOrigin(0.5, 1).setScale(2);
     const warrior = this.add.sprite(400, 800, 'warrior').setOrigin(0.5, 1).setScale(3.5);
-    
+
     orc.play('orc_front_idle');
     warrior.play('warrior_back_walk');
 
     const startWalkingSteps = () => {
       playWarriorStepAudio();
-      
       stepTimer = this.time.addEvent({
-        delay: 1000, // play 1 step each second
+        delay: 1000,
         callback: playWarriorStepAudio,
         callbackScope: this,
         loop: true
@@ -114,12 +103,11 @@ export class NewGame extends Phaser.Scene {
 
     const stopWalkingSteps = () => {
       if (stepTimer) {
-        stepTimer.remove(); 
+        stepTimer.remove();
         stepTimer = null;
       }
     };
 
-    // Stop the background music for dramatic effect
     const startScreen = this.scene.get('StartScreen');
     if (startScreen && startScreen.stopBackgroundMusic) {
       startScreen.stopBackgroundMusic();
@@ -141,7 +129,7 @@ export class NewGame extends Phaser.Scene {
       { emisor: "orc", text: "Very well. Tell your 'Stonewall' General he has his pact. The Iron Claws hunger for a real fight. This will be... glorious." },
       { emisor: "orc", text: "Now get out of my sight. And Kaelen... tell Roric that if this is a trick, my armies will march on his lands *after* we've feasted on the Mages." },
       { emisor: "warrior", text: "(Muttering to self as he leaves) He agreed too easily. The Mages are a threat, but... sacrificing the Dwarves feels wrong. The General is blind. I have to warn them." }
-  ], {
+    ], {
       characterSettings: {
         orc: {
           width: 150,
@@ -157,27 +145,21 @@ export class NewGame extends Phaser.Scene {
         }
       },
       onComplete: () => {
-        warrior.play("warrior_side_idle"); // rotate the warrior to turn around
-        warrior.x -= 50;
-        this.time.delayedCall(100, () => {
-          warrior.play("warrior_front_walk");
-          warrior.x += 50;
-          startWalkingSteps();
-
-          this.tweens.add({
-            targets: warrior,
-            y: 900,
-            duration: 5000,
-            ease: "linear",
-            onComplete: () => {
-              stopWalkingSteps();
-              this.cameras.main.fadeOut(2000, 0, 0, 0);
-              this.time.delayedCall(2000, () => {
-                alert("starting new scene");
-                // this.scene.start('NextScene');
-              });
-            }
-          });
+        warrior.play("warrior_front_walk");
+        startWalkingSteps();
+        
+        this.tweens.add({
+          targets: warrior,
+          y: 900,
+          duration: 5000,
+          ease: "linear",
+          onComplete: () => {
+            stopWalkingSteps();
+            this.cameras.main.fadeOut(2000, 0, 0, 0);
+            this.time.delayedCall(2000, () => {
+              this.scene.start('NextScene');
+            });
+          }
         });
       }
     });
@@ -194,12 +176,8 @@ export class NewGame extends Phaser.Scene {
         stopWalkingSteps();
         this.time.delayedCall(500, () => {
           dialogs.play();
-          // warrior turns arround and leaves
-          // scene slowly goes black and music starts playing
-          // swap to new scene (maybe other characters and their point of view)
         });
       }
     });
-
   }
 }
