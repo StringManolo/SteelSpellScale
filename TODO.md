@@ -27,6 +27,7 @@ ideas:
 - Make regular mobs design (sprite with animation of attack and death) 
 - Make XP system
 - Make level up / stats system (for both characters and enemies)
+- Design controls (move character on the map)
 
 
 ### Story
