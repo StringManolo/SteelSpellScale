@@ -1,10 +1,33 @@
 # Todo
 
 - Remove Watermark from screenStartBackground image
-- Add loading message while the lib loads
-- Check if posible music autoplay
-- Add sound effects for button clicks
-- Flip horizonatlly sprites to walk left
+- Add loading message while the lib loads (custom load screen instead of green screen)
+- Add Video Scene after Start game scene (movie before warrioir walks in the castle)
+- Make walking animations realistic by swapping between idle and walking sprites
+- Instead of Orc and Warrior, use charcaters names
+- Improve dialogs text quality
+- Make dialog background transparent
+- Add magic stone animation (png swap on loop, and moves up and down floating)
+- Reduce quality of all assets for faster loading
+- Optionally download and save all resources on cache at start screen with a downloading wait screen / loading bar
+- Make a design for body background instead of a white background
+- Cut sprites pixel by pixel (red) then cut them automatically by removing red color
+- Make a design for "SteelSpellScale" title
+- Add more lore and story (characters development)
+- Design world map
+- Make first playable scene
+- Make designs for menus, hp bars, etc
+- Make combat (combat scene) (back to previous scene or to title screen if u die (hardcore)
+- Design combat system  
+ideas:  
+  - roguelike movement and attacks with cards (maybe full open world with enemies spawning randomly at the world map)
+  - clasic RPG, enemies spawn when moving for a while based on % of encounter
+  - autochest
+  - cards system
+- Make regular mobs design (sprite with animation of attack and death) 
+- Make XP system
+- Make level up / stats system (for both characters and enemies)
+
 
 ### Story
 ##### Main
@@ -18,3 +41,8 @@ The Orcs created the rumors to make the Warriors and the Dwarves figth the Mages
 #### Code Scenes
 - Orc asks player for the name.
 - Dialogs
+
+
+#### Charcaters
+##### Name
+Lore

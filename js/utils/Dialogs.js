@@ -104,7 +104,7 @@ export class Dialogs {
   }
 
   playSound() {
-    this.scene.sound.play('dialog_sound', { volume: 1 });
+    this.scene.sound.play('dialog_sound', { volume: 0.7 });
   }
 
   play() {

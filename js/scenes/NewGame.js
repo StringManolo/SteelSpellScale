@@ -160,6 +160,7 @@ export class NewGame extends Phaser.Scene {
         warrior.play("warrior_side_idle"); // rotate the warrior to turn around
         warrior.x -= 50;
         this.time.delayedCall(100, () => {
+          warrior.flipX = true; // Make the spear match the hand
           warrior.play("warrior_front_walk");
           warrior.x += 50;
           startWalkingSteps();
@@ -173,8 +174,7 @@ export class NewGame extends Phaser.Scene {
               stopWalkingSteps();
               this.cameras.main.fadeOut(2000, 0, 0, 0);
               this.time.delayedCall(2000, () => {
-                alert("starting new scene");
-                // this.scene.start('NextScene');
+                this.scene.start('MageSanctuary');
               });
             }
           });
