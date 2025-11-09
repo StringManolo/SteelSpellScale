@@ -180,9 +180,7 @@ export class MageSanctuary extends Phaser.Scene {
         this.cameras.main.fadeOut(2000, 0, 0, 0);
         
         this.time.delayedCall(2000, () => {
-          alert("Starting the first playable map controlling Kaelen (e.g., 'WorldMap')");
-          
-          // this.scene.start('WorldMap'); 
+          this.scene.start('WorldMap'); 
         });
       }
     });

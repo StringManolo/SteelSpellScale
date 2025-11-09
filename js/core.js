@@ -2,6 +2,7 @@ import { StartScreen } from './scenes/StartScreen.js';
 import { TitleMenu } from "./scenes/TitleMenu.js";
 import { NewGame } from "./scenes//NewGame.js";
 import { MageSanctuary } from "./scenes/MageSanctuary.js";
+import { WorldMap } from "./scenes/WorldMap.js";
 
 const config = {
   type: Phaser.AUTO,
@@ -11,7 +12,7 @@ const config = {
   pixelArt: true,
   backgroundColor: '#0f380f',
   parent: 'game-container',
-  scene: [StartScreen, TitleMenu, NewGame, MageSanctuary],
+  scene: [StartScreen, TitleMenu, NewGame, MageSanctuary, WorldMap],
   physics: {
     default: 'arcade',
     arcade: {

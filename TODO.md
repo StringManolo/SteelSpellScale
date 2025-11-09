@@ -30,6 +30,7 @@ ideas:
 - Design controls (move character on the map)
 - Implement options and continue (continue saves the scene, stats, position, etc)
 - Evaluate if making it multiplayer using firebase as backend after reaching level 50
+- Check flipX on warrior on WorldMap.js to fix spear possition 
 
 ### Story
 ##### Main
