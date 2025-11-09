@@ -29,6 +29,7 @@ ideas:
 - Make level up / stats system (for both characters and enemies)
 - Design controls (move character on the map)
 - Implement options and continue (continue saves the scene, stats, position, etc)
+- Evaluate if making it multiplayer using firebase as backend after reaching level 50
 
 ### Story
 ##### Main
