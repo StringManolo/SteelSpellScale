@@ -37,6 +37,11 @@ export class WorldMap extends Phaser.Scene {
     this.mapWidth = 50;
     this.mapHeight = 50;
 
+    // properties to find battles
+    this.lastPlayerTile = { x: 0, y: 0 };
+    this.encounterChance = 0.3; // 30% when moving
+    this.encounterCooldown = 0; // Cooldown between battles
+
     this.createTileMap();
     this.createPlayer();
     this.setupPhysics();
@@ -44,11 +49,149 @@ export class WorldMap extends Phaser.Scene {
     this.setupCamera();
     this.setupClickMovement();
 
-    this.stepSound = this.sound.add("warrior_step_audio", { volume: 0.3 });
+    this.stepSound = this.sound.add("warrior_step_audio", { volume: 0.6 });
     this.isWalking = false;
     this.isMovingByClick = false;
-    
+
     this.setupCollisions();
+  
+    this.updatePlayerTile();
+  }
+
+
+  updatePlayerTile() {
+    const currentTileX = Math.floor(this.player.x / this.tileSize);
+    const currentTileY = Math.floor(this.player.y / this.tileSize);
+
+    // Detect if player swaped tile
+    if (currentTileX !== this.lastPlayerTile.x || currentTileY !== this.lastPlayerTile.y) {
+      this.lastPlayerTile = { x: currentTileX, y: currentTileY };
+      
+      // Test if battle is on cooldown
+      if (this.encounterCooldown <= 0) {
+        this.checkRandomEncounter();
+      } else {
+        this.encounterCooldown--;
+      }
+    }
+  }
+
+  // Check if tile has encounters
+  checkRandomEncounter() {
+    // Only on some terrains
+    const currentGroundIndex = this.lastPlayerTile.y * this.mapWidth + this.lastPlayerTile.x;
+    const currentGround = this.tileLayers.ground[currentGroundIndex];
+    
+    // Ajustar probabilidad según el terreno (opcional)
+    let encounterRate = this.encounterChance;
+    if (currentGround.texture.key === 'forest') {
+      encounterRate *= 1.5; // 15% more
+    } else if (currentGround.texture.key === 'path') {
+      encounterRate *= 0.5; // 5% more
+    } else if (currentGround.texture.key === 'mountain') {
+      encounterRate = 0.5; // 5% more
+    }
+
+    // Random encounter
+    if (Math.random() < encounterRate) {
+      this.triggerBattle();
+    }
+  }
+
+
+  triggerBattle() {
+    console.log("¡Enemy found!, starting battle...");
+    
+    // Stop WorldMap.js scene
+    this.scene.pause();
+    this.saveWorldState();
+    this.sound.stopByKey("map_music");
+    
+    // Stop steps
+    if (this.stepTimer) {
+      this.stepTimer.remove();
+      this.isWalking = false;
+    }
+    
+    // Stop movement
+    if (this.isMovingByClick) {
+      this.isMovingByClick = false;
+      this.tweens.killTweensOf(this.player);
+    }
+    
+    // Start battle scene
+    this.scene.launch('BattleScene', {
+      playerData: this.getPlayerData(), // send player stats to the scene
+      onBattleEnd: (result) => this.onBattleEnd(result)
+    });
+    
+    this.encounterCooldown = 5; // cooldown for battles per tiles
+  }
+
+  // Data to send to the new scene
+  getPlayerData() {
+    return {
+      level: 1, // TODO: Save stats globally
+      health: 100,
+      maxHealth: 100,
+      // TODO: Add more stats
+      // TODO: Detect current terrain to load different battle backgrounda
+    };  
+  }
+
+  // Battle end callback
+  onBattleEnd(result) {
+    console.log("Battle ended: ", result);
+    
+    const music = this.sound.add("map_music", {
+      volume: 1,
+      loop: true
+    });
+    music.play();
+    
+    this.scene.resume();
+    
+    // Battle result logic
+    if (result.victory) {
+      // Player won
+      console.log("¡Victory!");
+    } else {
+      // Player lost
+      console.log("Defeat...");
+      // TODO: kill player in hardcore
+    }
+  }
+
+  // Save world state
+  saveWorldState() {
+    const worldState = {
+      playerPosition: {
+        x: this.player.x,
+        y: this.player.y
+      },
+      playerTile: this.lastPlayerTile,
+      encounterCooldown: this.encounterCooldown
+    };
+    
+    this.registry.set('worldState', worldState);
+    console.log('World state saved');
+  }
+
+  // Load world state
+  loadWorldState() {
+    const worldState = this.registry.get('worldState');
+    
+    if (worldState) {
+      console.log('Loading saved world state');
+      
+      // Recover player possition before battle
+      this.player.setPosition(worldState.playerPosition.x, worldState.playerPosition.y);
+      this.lastPlayerTile = worldState.playerTile;
+      this.encounterCooldown = worldState.encounterCooldown || 0;
+      
+      return true;
+    }
+    return false;
   }
 
   createTileMap() {
@@ -74,7 +217,7 @@ export class WorldMap extends Phaser.Scene {
 
         this.tileLayers.ground.push(tile);
 
-        // AGREGAR: El agua como obstáculo
+        // Water is also an obstacle 
         if (tileType === 'water') {
           this.tileLayers.collisions.push(tile);
         }
@@ -123,7 +266,7 @@ export class WorldMap extends Phaser.Scene {
     }).setOrigin(0.5);
   }
 
-  // Create the character on the map 
+  // Create the character on the map
   createPlayer() {
     this.player = this.physics.add.sprite(300, 300, 'warrior').setScale(1.5);
     this.player.setCollideWorldBounds(true);
@@ -162,7 +305,7 @@ export class WorldMap extends Phaser.Scene {
       frames: [{ key: 'warrior', frame: 5 }]
     });
   }
-  
+
   // Make character coliison with map limits
   setupPhysics() {
     this.physics.world.setBounds(0, 0, this.mapBounds.width, this.mapBounds.height);
@@ -210,7 +353,7 @@ export class WorldMap extends Phaser.Scene {
   setupCollisions() {
     // Create the objects for the collision engine
     this.collisionObjects = this.physics.add.staticGroup();
-    
+
     // Add the existing objects to the collision collection
     this.tileLayers.collisions.forEach(obj => {
       // Add the physics to the object
@@ -255,16 +398,16 @@ export class WorldMap extends Phaser.Scene {
     const steps = 10; // Const to setup steps (1 step per tile)
     const dx = (endX - startX) / steps;
     const dy = (endY - startY) / steps;
-    
+
     for (let i = 1; i <= steps; i++) {
       const checkX = startX + dx * i;
       const checkY = startY + dy * i;
-      
+
       if (this.checkCollisionAt(checkX, checkY)) {
         return true; // Collision detected
       }
     }
-    
+
     return false; // No collision
   }
 
@@ -283,13 +426,13 @@ export class WorldMap extends Phaser.Scene {
           if (Math.abs(x - targetTileX) === radius || Math.abs(y - targetTileY) === radius) {
             const checkX = x * this.tileSize + this.tileSize/2;
             const checkY = y * this.tileSize + this.tileSize/2;
-            
+
             // Make sure not going out of map boundaries
-            if (checkX >= 0 && checkX < this.mapBounds.width && 
+            if (checkX >= 0 && checkX < this.mapBounds.width &&
                 checkY >= 0 && checkY < this.mapBounds.height) {
-              
+
               // Assert there is no collision now before moving
-              if (!this.checkCollisionAt(checkX, checkY) && 
+              if (!this.checkCollisionAt(checkX, checkY) &&
                   !this.checkPathCollision(this.player.x, this.player.y, checkX, checkY)) {
                 return { x: checkX, y: checkY };
               }
@@ -298,7 +441,7 @@ export class WorldMap extends Phaser.Scene {
         }
       }
     }
-    
+
     // If there is no available path, do not even move
     return null;
   }
@@ -320,7 +463,7 @@ export class WorldMap extends Phaser.Scene {
     }
 
     // Chech for collisions before moving
-    if (this.checkCollisionAt(destination.x, destination.y) || 
+    if (this.checkCollisionAt(destination.x, destination.y) ||
         this.checkPathCollision(this.player.x, this.player.y, destination.x, destination.y)) {
       // If there is collision, try to find an availbale path
       const validPosition = this.findNearestValidPosition(targetX, targetY);
@@ -356,7 +499,7 @@ export class WorldMap extends Phaser.Scene {
       // Vertical Movement
       if (dy > 0) {
         this.player.play('warrior_front_walk', true);
-        this.player.flipX = true; 
+        this.player.flipX = true;
       } else {
         this.player.play('warrior_back_walk', true);
       }
@@ -379,6 +522,9 @@ export class WorldMap extends Phaser.Scene {
         this.isMovingByClick = false;
         this.player.play(this.getCurrentIdleAnimation(), true);
         this.moveCursor.setAlpha(0);
+        
+        // Update tile and check for battles
+        this.updatePlayerTile();
       }
     });
 
@@ -425,7 +571,7 @@ export class WorldMap extends Phaser.Scene {
 
   update(time, delta) {
     // Ignore keyboard inputs if already being moved by click/tap
-    if (this.isMovingByClick) {                                                               
+    if (this.isMovingByClick) {                                                         
       this.player.body.setVelocity(0);
       return;
     }
@@ -455,6 +601,11 @@ export class WorldMap extends Phaser.Scene {
       this.player.play('warrior_front_walk', true);
       this.player.flipX = true;
       moving = true;
+    }
+
+    // Updatd tile, check for battles
+    if (moving) {
+      this.updatePlayerTile();
     }
 
     // Idle sprite when no moving

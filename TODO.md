@@ -31,6 +31,8 @@ ideas:
 - Implement options and continue (continue saves the scene, stats, position, etc)
 - Evaluate if making it multiplayer using firebase as backend after reaching level 50
 - Check flipX on warrior on WorldMap.js to fix spear possition 
+- Add more music for WorldMap.js (chose randomly between available tracks)
+- Add options scene (by pausing title scene), Casual / Hardcore mode.
 
 ### Story
 ##### Main
