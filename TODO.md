@@ -1,6 +1,5 @@
 # Todo
 
-- Remove Watermark from screenStartBackground image
 - Add loading message while the lib loads (custom load screen instead of green screen)
 - Add Video Scene after Start game scene (movie before warrioir walks in the castle)
 - Make walking animations realistic by swapping between idle and walking sprites
