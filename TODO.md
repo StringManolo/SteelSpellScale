@@ -42,6 +42,7 @@ ideas:
 - Add death animation of enemies
 - Add numbers or bars to battle screen (or hidde)
 - Add post battle results screen
+- Improve quality of orc and warrior spritesheets (orc should be a king spritesheet)
 
 ### Story
 ##### Main
