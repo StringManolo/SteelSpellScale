@@ -35,12 +35,12 @@ export class WorldMap extends Phaser.Scene {
 
     this.tileSize = 64;
     this.mapWidth = 50;
-    this.mapHeight = 50;
+    this.mapHeight = 100;
 
     // properties to find battles
     this.lastPlayerTile = { x: 0, y: 0 };
     this.encounterChance = 0.3; // 30% when moving
-    this.encounterCooldown = 0; // Cooldown between battles
+    this.encounterCooldown = 3; // Cooldown between battles
 
     this.createTileMap();
     this.createPlayer();
@@ -66,23 +66,25 @@ export class WorldMap extends Phaser.Scene {
     // Detect if player swaped tile
     if (currentTileX !== this.lastPlayerTile.x || currentTileY !== this.lastPlayerTile.y) {
       this.lastPlayerTile = { x: currentTileX, y: currentTileY };
+ 
+      // get currentTile
+      const currentGroundIndex = currentTileX * this.mapHeight + currentTileY;
+      if (currentGroundIndex >= 0 && currentGroundIndex < this.tileLayers.ground.length) {
+        const currentGround = this.tileLayers.ground[currentGroundIndex];
       
-      // Test if battle is on cooldown
-      if (this.encounterCooldown <= 0) {
-        this.checkRandomEncounter();
-      } else {
-        this.encounterCooldown--;
+        // Test if battle is on cooldown
+        if (this.encounterCooldown <= 0) {
+          this.checkRandomEncounter(currentGround);
+        } else {
+          this.encounterCooldown--;
+        }
       }
     }
   }
 
   // Check if tile has encounters
-  checkRandomEncounter() {
-    // Only on some terrains
-    const currentGroundIndex = this.lastPlayerTile.y * this.mapWidth + this.lastPlayerTile.x;
-    const currentGround = this.tileLayers.ground[currentGroundIndex];
-    
-    // Ajustar probabilidad según el terreno (opcional)
+  checkRandomEncounter(currentGround) {
+    // Adapt probability based on terrain
     let encounterRate = this.encounterChance;
     if (currentGround.texture.key === 'forest') {
       encounterRate *= 1.5; // 15% more
@@ -94,14 +96,17 @@ export class WorldMap extends Phaser.Scene {
 
     // Random encounter
     if (Math.random() < encounterRate) {
-      this.triggerBattle();
+      this.triggerBattle(currentGround);
     }
   }
 
 
-  triggerBattle() {
+  triggerBattle(currentGround) {
     console.log("¡Enemy found!, starting battle...");
-    
+   
+
+    console.log(`Sending ${currentGround.texture.key} terrain to BattleScene`);
+
     // Stop WorldMap.js scene
     this.scene.pause();
     this.saveWorldState();
@@ -122,6 +127,7 @@ export class WorldMap extends Phaser.Scene {
     // Start battle scene
     this.scene.launch('BattleScene', {
       playerData: this.getPlayerData(), // send player stats to the scene
+      terrain: currentGround.texture.key, // send actual terrain (tile)
       onBattleEnd: (result) => this.onBattleEnd(result)
     });
     
@@ -202,7 +208,7 @@ export class WorldMap extends Phaser.Scene {
     };
 
     // Generate map randomly using available tiles
-    // Map generation is very simple TODO: Make a better map generation
+    // Map generation is very simple TODO: Make a better map generation (or use image as a map)
     for (let x = 0; x < this.mapWidth; x++) {
       for (let y = 0; y < this.mapHeight; y++) {
         let tileType = 'grass';
@@ -210,6 +216,7 @@ export class WorldMap extends Phaser.Scene {
         if (noise < 0.2) tileType = 'forest';
         else if (noise < 0.25) tileType = 'path';
         else if (noise < 0.28) tileType = 'water';
+        else if (noise < 0.31) tileType = "mountain";
 
         const tile = this.add.image(x * this.tileSize, y * this.tileSize, tileType)
           .setOrigin(0)

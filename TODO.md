@@ -33,6 +33,15 @@ ideas:
 - Check flipX on warrior on WorldMap.js to fix spear possition 
 - Add more music for WorldMap.js (chose randomly between available tracks)
 - Add options scene (by pausing title scene), Casual / Hardcore mode.
+- Set enemy based on terrain
+- Create combate system like Pokemon (mix between pokemon and clasic rpg and mobas combat systems)
+- Make combat sprites based on habilities
+- Improve loading speed of battleScene
+- Make attack animations (character moves while attacking)
+- Add combat sound effects and animations (slash effect on enemy)
+- Add death animation of enemies
+- Add numbers or bars to battle screen (or hidde)
+- Add post battle results screen
 
 ### Story
 ##### Main
