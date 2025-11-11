@@ -43,6 +43,8 @@ ideas:
 - Add numbers or bars to battle screen (or hidde)
 - Add post battle results screen
 - Improve quality of orc and warrior spritesheets (orc should be a king spritesheet)
+- Instead of loading BattleScene directly, add animation of screen cut. (show resources loading or preload at title menu / dialogs screen)
+
 
 ### Story
 ##### Main
