@@ -11,7 +11,7 @@ const config = {
   height: 600,
   zoom: 1,
   pixelArt: true,
-  backgroundColor: '#0f380f',
+  backgroundColor: '#000000',
   parent: 'game-container',
   scene: [StartScreen, TitleMenu, NewGame, MageSanctuary, WorldMap, BattleScene],
   physics: {
