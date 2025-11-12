@@ -43,7 +43,7 @@ ideas:
 - Add post battle results screen
 - Improve quality of orc and warrior spritesheets (orc should be a king spritesheet)
 - Instead of loading BattleScene directly, add animation of screen cut. (show resources loading or preload at title menu / dialogs screen)
-
+- Add enemy attack animations
 
 ### Story
 ##### Main
