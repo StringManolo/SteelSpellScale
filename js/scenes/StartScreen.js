@@ -43,6 +43,7 @@ export class StartScreen extends Phaser.Scene {
       .on("pointerout", () => buttonImage.setScale(buttonImageScaleX, buttonImageScaleY))
       .on("pointerdown", () => {
         this.sound.add("start_button_sound", { volume: 20, loop: false }).play();
+        // this.scene.start("WorldMap"); // DEV-ONLY: Debug specific scene 
         this.scene.start('TitleMenu');
       });
 
