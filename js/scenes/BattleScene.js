@@ -79,11 +79,13 @@ export class BattleScene extends Phaser.Scene {
     this.enemy.setDisplaySize(175,175);
     
     // Add enemy name tag on top enemy
-    this.enemyNameText = this.add.text(400, 350, this.enemyConfig.name, {
+    this.enemyNameText = this.add.text(400, 190, this.enemyConfig.name, {
       fontSize: '20px',
       fill: '#fff',
       backgroundColor: '#000000'
-    }).setOrigin(0.5);
+    }).setPadding(5, 5, 5, 5)
+      .setOrigin(0.5)
+      .setAlpha(0.8);
 
     // Enemy HP bar
     this.createEnemyHPBar();
@@ -137,15 +139,15 @@ export class BattleScene extends Phaser.Scene {
 
   createEnemyHPBar() {
     // HP bar background
-    this.enemyHpBarBg = this.add.rectangle(400, 320, 200, 20, 0x000000);
+    this.enemyHpBarBg = this.add.rectangle(400, 220, 200, 20, 0x000000);
     this.enemyHpBarBg.setStrokeStyle(2, 0xffffff);
     
     // HP bar
-    this.enemyHpBar = this.add.rectangle(302, 320, 196, 16, 0x00ff00);
+    this.enemyHpBar = this.add.rectangle(302, 220, 196, 16, 0x00ff00);
     this.enemyHpBar.setOrigin(0, 0.5);
     
     // HP text
-    this.enemyHpText = this.add.text(400, 320, `${this.enemyStats.currentHp}/${this.enemyStats.maxHp}`, {
+    this.enemyHpText = this.add.text(400, 220, `${this.enemyStats.currentHp}/${this.enemyStats.maxHp}`, {
       fontSize: '14px',
       fill: '#fff'
     }).setOrigin(0.5);
@@ -153,30 +155,32 @@ export class BattleScene extends Phaser.Scene {
 
   createPlayerHPBar() {
     // HP bar background
-    this.playerHpBarBg = this.add.rectangle(400, 550, 200, 20, 0x000000);
+    this.playerHpBarBg = this.add.rectangle(400, 480, 200, 20, 0x000000);
     this.playerHpBarBg.setStrokeStyle(2, 0xffffff);
     
     // HP bar
-    this.playerHpBar = this.add.rectangle(302, 550, 196, 16, 0x00ff00);
+    this.playerHpBar = this.add.rectangle(302, 480, 196, 16, 0x00ff00);
     this.playerHpBar.setOrigin(0, 0.5);
     
     // HP text
-    this.playerHpText = this.add.text(400, 550, `${this.warriorStats.currentHp}/${this.warriorStats.maxHp}`, {
+    this.playerHpText = this.add.text(400, 480, `${this.warriorStats.currentHp}/${this.warriorStats.maxHp}`, {
       fontSize: '14px',
       fill: '#fff'
     }).setOrigin(0.5);
 
     // Player name and level
-    this.playerInfoText = this.add.text(400, 530, `Warrior Lv.${this.warriorStats.level}`, {
+    this.playerInfoText = this.add.text(400, 445, `Warrior Lv.${this.warriorStats.level}`, {
       fontSize: '16px',
       fill: '#fff',
       backgroundColor: '#000000'
-    }).setOrigin(0.5);
-  }
+    }).setPadding(5, 5, 5, 5)
+      .setOrigin(0.5)
+      .setAlpha(0.8);
+}
 
   createBattleUI() {
     // Battle menu background
-    this.menuBg = this.add.rectangle(160, 527, 275, 140, 0x000000);
+    this.menuBg = this.add.rectangle(140, 527, 275, 140, 0x000000);
     this.menuBg.setAlpha(0.7);
     this.menuBg.setStrokeStyle(2, 0xffffff);
 
@@ -194,7 +198,7 @@ export class BattleScene extends Phaser.Scene {
     const buttonHeight = 40;
     const horizontalSpacing = 10;
     const verticalSpacing = 15;
-    const startY = 500;
+    const startY = 490;
 
     this.battleOptions.forEach((option, index) => {
       // Calculate rows and colums for buttons
@@ -202,7 +206,7 @@ export class BattleScene extends Phaser.Scene {
       const col = index % 2; 
 
       // Calculate buttons positions
-      const x = 50 + col * (buttonWidth + horizontalSpacing);
+      const x = 30 + col * (buttonWidth + horizontalSpacing);
       const y = startY + row * (buttonHeight + verticalSpacing);
       const optionText = this.add.text(x, y, option.text, {
         fontSize: '18px',
@@ -223,7 +227,7 @@ export class BattleScene extends Phaser.Scene {
     });
 
     // Battle log
-    this.battleLog = this.add.text(160, 470, 'A wild ' + this.enemyConfig.name + ' appears!', {
+    this.battleLog = this.add.text(140, /*470*/ 30, 'A wild ' + this.enemyConfig.name + ' appears!', {
       fontSize: '16px',
       fill: '#fff',
       backgroundColor: '#000000',
